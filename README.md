@@ -18,6 +18,8 @@ Multiservo
 
 #include <Wire.h>
 #include <Multiservo.h>
+
+#define MULTISERVO_PIN 17
  
 XServo myservo;
  
@@ -26,7 +28,7 @@ int pos = 0;
 void setup(void)
 {
   Wire.begin();
-  myservo.attach(17);
+  myservo.attach(MULTISERVO_PIN);
 }
  
 void loop(void)
