@@ -1,15 +1,19 @@
 Multiservo
 ==========
 
-Библиотека для Arduino, которая позволяет управлять 18 сервоприводами при помощи [Multiservo Shield](http://amperka.ru/product/arduino-multiservo-shield)
+Библиотека для Arduino, которая позволяет управлять 18 сервоприводами при
+помощи [Multiservo Shield](http://amperka.ru/product/arduino-multiservo-shield)
 от Амперки.
 
 Установка
 =========
 
-Скопируйте директорию ''Multiservo'' в ''$sketchbook/libraries'', где ''$sketchbook'' — ваша директория со скетчами.
+Перейдите в раздел «[releases](https://github.com/amperka/Multiservo/releases)»
+и скачайте последний архив с последней версией библиотеки.
 
-После этого перезагрузите Arduino IDE.
+В Arduino IDE выберите пункт меню «Скетч» → «Импортировать библиотеку» →
+«Добавить библиотеку…». В появившемся окне выберите скачаный архив с
+библиотекой. Установка завершена.
 
 Пример использования
 ====================
