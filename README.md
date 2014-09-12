@@ -8,10 +8,7 @@ Multiservo
 Установка
 =========
 
-Перейдите в раздел «[releases](https://github.com/amperka/Multiservo/releases)»
-и скачайте последний архив с последней версией библиотеки.
-
-<img src="https://raw.githubusercontent.com/amperka/Multiservo/master/download.png" alt="Кнопка загрузки релиза"/>
+Скачайте последний [релиз библиотеки](https://github.com/amperka/Multiservo/releases/download/1.0.1/multiservo-1.0.1.zip).
 
 В Arduino IDE выберите пункт меню «Скетч» → «Импортировать библиотеку» →
 «Добавить библиотеку…». В появившемся окне выберите скачаный архив с
