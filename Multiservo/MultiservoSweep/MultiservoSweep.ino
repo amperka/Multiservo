@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <Multiservo.h>
 
-XServo myservo;
+Multiservo myservo;
 
 int pos = 0;  
 

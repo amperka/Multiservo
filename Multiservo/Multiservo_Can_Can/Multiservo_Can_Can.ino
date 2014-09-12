@@ -3,7 +3,7 @@
 
 #define SERVO_COUNT 18
 
-XServo servo[SERVO_COUNT];
+Multiservo servo[SERVO_COUNT];
 
 int pos = 0;
 

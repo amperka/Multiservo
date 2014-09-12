@@ -21,7 +21,7 @@ Multiservo
 
 #define MULTISERVO_PIN 17
  
-XServo myservo;
+Multiservo myservo;
  
 int pos = 0;  
  

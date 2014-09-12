@@ -1,59 +1,60 @@
-
 #ifndef MULTISERVO_H
 #define MULTISERVO_H
 
 #include <inttypes.h>
 
-#define XSERVO_DEFAULT_ADDRESS      0x47
-#define XSERVO_DEFAULT_MIN_PULSE    544
-#define XSERVO_DEFAULT_MAX_PULSE    2400
-#define XSERVO_DEFAULT_ATTEMPTS     4
-
-#define XSERVO_MAX_PIN              18
-#define XSERVO_PULSE_LIMIT          19000
-
-enum XSERVO_ERROR
+class Multiservo
 {
-    XS_OK = 0,
-    XS_DATA_TOO_LONG = 1,
-    XS_NACK_ON_ADDRESS = 2,
-    XS_NACK_ON_DATA = 3,
-    XS_TWI_ERROR = 4,
-    XS_BAD_PIN = 5,
-    XS_BAD_PULSE = 6
-};
+public:
+  enum Error
+  {
+    OK = 0,
+    DATA_TOO_LONG,
+    NACK_ON_ADDRESS,
+    NACK_ON_DATA,
+    TWI_ERROR,
+    BAD_PIN,
+    BAD_PULSE
+  };
 
+  Multiservo();
+  Multiservo(uint8_t twiAddress);
 
-XSERVO_ERROR xservoWriteMicroseconds(
-        uint8_t pin, uint16_t pulseWidth, 
-        uint8_t twiAddress = XSERVO_DEFAULT_ADDRESS, 
-        uint8_t retryAttempts = XSERVO_DEFAULT_ATTEMPTS);
+  Error attach(int pin);
+  Error attach(int pin, int minPulse, int maxPulse);
 
+  Error detach();
 
-class XServo
-{
-    public:
-        XServo(uint8_t twiAddress = XSERVO_DEFAULT_ADDRESS);
+  Error write(int value);
+  Error writeMicroseconds(int pulseWidth);
 
-        XSERVO_ERROR attach(
-                int pin, 
-                int minPulse = XSERVO_DEFAULT_MIN_PULSE, 
-                int maxPulse = XSERVO_DEFAULT_MAX_PULSE);
+  int read() const;
+  bool attached() const;
 
-        XSERVO_ERROR detach();
+protected:
+  static const unsigned int  AddressDefault;
+  static const unsigned int  PulseMinDefault;
+  static const unsigned int  PulseMaxDefault;
+  static const unsigned int  nAttemptsDefault;
+  static const unsigned char PinInvalid;
+  static const unsigned int  nPinMax;
+  static const unsigned int  PulseMaxAbsolute;
 
-        XSERVO_ERROR write(int value);
-        XSERVO_ERROR writeMicroseconds(int pulseWidth);
+  uint8_t  m_iPin;
+  uint8_t  m_twiAddress;
+  uint16_t m_minPulse;
+  uint16_t m_maxPulse;
+  uint16_t m_pulseWidth;
 
-        int read() const;
-        bool attached() const;
-
-    private:
-        uint8_t _pin;
-        uint8_t _twiAddress;
-        uint16_t _minPulse;
-        uint16_t _maxPulse;
-        uint16_t _pulseWidth;
+//private:
+public:
+  static Error writeMicroseconds(
+                                        uint8_t pin, uint16_t pulseWidth, 
+                                        uint8_t twiAddress, uint8_t retryAttempts
+                                      );
 };
 
 #endif
+
+// vim: sw=2 sts=2 ts=8:
+
