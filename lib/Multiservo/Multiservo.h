@@ -30,10 +30,10 @@ XSERVO_ERROR xservoWriteMicroseconds(
         uint8_t retryAttempts = XSERVO_DEFAULT_ATTEMPTS);
 
 
-class XServo
+class Multiservo
 {
     public:
-        XServo(uint8_t twiAddress = XSERVO_DEFAULT_ADDRESS);
+        Multiservo(uint8_t twiAddress = XSERVO_DEFAULT_ADDRESS);
 
         XSERVO_ERROR attach(
                 int pin, 
@@ -57,3 +57,6 @@ class XServo
 };
 
 #endif
+
+// vim: sw=2 sts=2 ts=8:
+

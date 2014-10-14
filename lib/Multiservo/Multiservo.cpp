@@ -24,14 +24,14 @@ XSERVO_ERROR xservoWriteMicroseconds(
     return errorCode;
 }
 
-XServo::XServo(uint8_t twiAddress)
+Multiservo::Multiservo(uint8_t twiAddress)
 {
     _twiAddress = twiAddress;
     _pulseWidth = 0;
     _pin = NO_PIN;
 }
 
-XSERVO_ERROR XServo::attach(int pin, int minPulse, int maxPulse)
+XSERVO_ERROR Multiservo::attach(int pin, int minPulse, int maxPulse)
 {
     if (pin < 0 || pin >= XSERVO_MAX_PIN) {
         detach();
@@ -55,7 +55,7 @@ XSERVO_ERROR XServo::attach(int pin, int minPulse, int maxPulse)
     return XS_OK;
 }
 
-XSERVO_ERROR XServo::detach()
+XSERVO_ERROR Multiservo::detach()
 {
     if (!attached())
         return XS_OK;
@@ -67,7 +67,7 @@ XSERVO_ERROR XServo::detach()
     return err;
 }
 
-XSERVO_ERROR XServo::write(int value)
+XSERVO_ERROR Multiservo::write(int value)
 {
     if (value < _minPulse) {
         value = constrain(value, 0, 180);
@@ -77,7 +77,7 @@ XSERVO_ERROR XServo::write(int value)
     return writeMicroseconds(value);
 }
 
-XSERVO_ERROR XServo::writeMicroseconds(int pulseWidth)
+XSERVO_ERROR Multiservo::writeMicroseconds(int pulseWidth)
 {
     if (!attached())
         return XS_BAD_PIN;
@@ -91,12 +91,15 @@ XSERVO_ERROR XServo::writeMicroseconds(int pulseWidth)
     return xservoWriteMicroseconds(_pin, _pulseWidth, _twiAddress);
 }
 
-int XServo::read() const
+int Multiservo::read() const
 {
     return map(_pulseWidth, _minPulse, _maxPulse, 0, 180);
 }
 
-bool XServo::attached() const
+bool Multiservo::attached() const
 {
     return _pin != NO_PIN;
 }
+
+// vim: sw=2 sts=2 ts=8:
+
