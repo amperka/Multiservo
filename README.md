@@ -10,7 +10,7 @@ Multiservo
 
 Скачайте последний [релиз библиотеки](https://github.com/amperka/Multiservo/releases/download/1.0.1/multiservo-1.0.1.zip):
 
-<a class="button primary" href="asdf">Haha</a>
+<a style="padding-top: 7px; padding-bottom: 7px; padding-left: 12px; padding-right: 12px; background: #569e3d; background: linear-gradient(#79d858, #569e3d); border: 1px solid #4a993e; border-radius: 5px;font-size:13px;font:13px/1.4 Helvetica,arial,sans-serif;font-weight:bold;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,0.25);text-decoration:none;" href="">Haha</a>
 
 <a href="https://github.com/amperka/Multiservo/releases/download/1.0.1/multiservo-1.0.1.zip"><img src="https://raw.githubusercontent.com/amperka/Multiservo/master/download.png" alt="Кнопка загрузки"/></a>
 
