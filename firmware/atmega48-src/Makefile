@@ -25,7 +25,7 @@ TARGET = main
 # AVRDUDE_PROGRAMMER = dapa              # official name of 
 AVRDUDE_PROGRAMMER = avrispmkII
 
-AVRDUDE_PORT = usb1
+AVRDUDE_PORT = /dev/ttyUSB0
 #AVRDUDE_PORT = /dev/parport0           # linux
 #AVRDUDE_PORT = lpt1		       # windows
 
@@ -284,7 +284,7 @@ extcoff: $(TARGET).elf
 
 
 # Program the device.  
-program: $(TARGET).hex $(TARGET).eep
+program:
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
 
