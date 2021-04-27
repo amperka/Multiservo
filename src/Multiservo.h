@@ -15,23 +15,23 @@ constexpr uint16_t MULTISERVO_MAX_PULSE_WIDTH = 2400;
 
 class Multiservo {
 public:
-    Multiservo(uint8_t twiAddress = MULTISERVO_I2C_ADDRESS_DEFAULT);
-    void attach(int pin);
-    void attach(int pin, int minPulse, int maxPulse);
+    Multiservo(uint8_t i2cAddress = MULTISERVO_I2C_ADDRESS_DEFAULT);
+    void attach(int pin, int minPulse = MULTISERVO_MIN_PULSE_WIDTH, int maxPulse = MULTISERVO_MAX_PULSE_WIDTH);
     void detach();
-    void write(int value);
-    void writeMicroseconds(int pulseWidth);
-    void writeMicroseconds(uint8_t pin, uint16_t pulseWidth,
-                                  uint8_t twiAddress);
+    void write(int angle);
+    void writeMicroseconds(int pulse);
+    void writeMicroseconds(uint8_t pin, uint16_t pulse,
+                                  uint8_t i2cAddress);
     int read() const;
     bool attached() const;
 
 private:
-    uint8_t m_iPin;
-    uint8_t m_twiAddress;
-    uint16_t m_minPulse;
-    uint16_t m_maxPulse;
-    uint16_t m_pulseWidth;
+    uint8_t _i2cAddress;
+    uint8_t _pin;
+    uint16_t _pulse;
+    uint16_t _minPulse;
+    uint16_t _maxPulse;
+
 };
 
 #endif // __MULTISERVO_H__

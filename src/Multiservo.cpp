@@ -1,64 +1,59 @@
 #include "Multiservo.h"
 
-Multiservo::Multiservo(uint8_t twiAddress)
-    : m_pulseWidth(0)
-    , m_twiAddress(twiAddress) {
+Multiservo::Multiservo(uint8_t i2cAddress)
+    : _i2cAddress(i2cAddress) {
     Wire.begin();
 }
 
-void Multiservo::attach(int pin) {
-    attach(pin, MULTISERVO_MIN_PULSE_WIDTH, MULTISERVO_MAX_PULSE_WIDTH);
-}
-
 void Multiservo::attach(int pin, int minPulse, int maxPulse) {
-    if (pin < MULTISERVO_MIN_PIN_SERVO || pin >= MULTISERVO_MAX_PIN_SERVO) { }
-
-    m_iPin = pin;
-    m_minPulse = minPulse;
-    m_maxPulse = maxPulse;
-    int i = (minPulse + maxPulse) / 2;
-    writeMicroseconds(i);
+    if (pin < MULTISERVO_MIN_PIN_SERVO || pin >= MULTISERVO_MAX_PIN_SERVO) {
+        return;
+    }
+    _pin = pin;
+    _minPulse = minPulse;
+    _maxPulse = maxPulse;
+    _pulse = (_minPulse + _maxPulse) / 2;
+    writeMicroseconds(_pulse);
 }
 
 void Multiservo::detach() {
-    if (!attached()) { }
-
-    writeMicroseconds(m_iPin, 0, m_twiAddress);
-}
-
-void Multiservo::write(int value) {
-    if (value < m_minPulse) {
-        value = constrain(value, 0, 180);
-        value = map(value, 0, 180, m_minPulse, m_maxPulse);
+    if (!attached()) {
+        return;
     }
-
-    writeMicroseconds(value);
+    writeMicroseconds(_pin, 0, _i2cAddress);
 }
 
-void Multiservo::writeMicroseconds(int pulseWidth) {
-    if (!attached()) { }
-
-    pulseWidth = constrain(pulseWidth, m_minPulse, m_maxPulse);
-
-    if (pulseWidth == m_pulseWidth) { }
-
-    m_pulseWidth = pulseWidth;
-
-    writeMicroseconds(m_iPin, m_pulseWidth, m_twiAddress);
+void Multiservo::write(int angle) {
+    uint16_t pulse;
+    angle = constrain(angle, 0, 180);
+    pulse = map(angle, 0, 180, _minPulse, _maxPulse);
+    writeMicroseconds(pulse);
 }
 
-void Multiservo::writeMicroseconds(uint8_t pin, uint16_t pulseWidth,
-                                   uint8_t twiAddress) {
+void Multiservo::writeMicroseconds(int pulse) {
+    if (!attached()) {
+        return;
+    }
+    pulse = constrain(pulse, _minPulse, _maxPulse);
+    if (pulse == _pulse) {
+        return;
+    }
+    _pulse = pulse;
+    writeMicroseconds(_pin, _pulse, _i2cAddress);
+}
 
-    Wire.beginTransmission(twiAddress);
+void Multiservo::writeMicroseconds(uint8_t pin, uint16_t pulse,
+                                   uint8_t i2cAddress) {
+
+    Wire.beginTransmission(i2cAddress);
     Wire.write(pin);
-    Wire.write(pulseWidth >> 8);
-    Wire.write(pulseWidth & 0xFF);
+    Wire.write((pulse >> 8) & 0xFF);
+    Wire.write(pulse & 0xFF);
     Wire.endTransmission();
 }
 
 int Multiservo::read() const {
-    return map(m_pulseWidth, m_minPulse, m_maxPulse, 0, 180);
+    return map(_pulse, _minPulse, _maxPulse, 0, 180);
 }
 
-bool Multiservo::attached() const { return m_iPin; }
+bool Multiservo::attached() const { return _pin; }
