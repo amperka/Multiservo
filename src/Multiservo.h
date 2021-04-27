@@ -1,50 +1,37 @@
 #ifndef __MULTISERVO_H__
 #define __MULTISERVO_H__
 
+#include <Arduino.h>
+#include <Wire.h>
+
+// I²C-address device
+constexpr uint8_t MULTISERVO_I2C_ADDRESS_DEFAULT = 0x47;
+// Minimum and maximum pin of servos
+constexpr uint8_t MULTISERVO_MIN_PIN_SERVO = 0;
+constexpr uint8_t MULTISERVO_MAX_PIN_SERVO = 18;
+// Shortest and longest pulse sent to a servo
+constexpr uint16_t MULTISERVO_MIN_PULSE_WIDTH = 544;
+constexpr uint16_t MULTISERVO_MAX_PULSE_WIDTH = 2400;
+
 class Multiservo {
 public:
-    enum Error {
-        OK = 0,
-        DATA_TOO_LONG,
-        NACK_ON_ADDRESS,
-        NACK_ON_DATA,
-        TWI_ERROR,
-        BAD_PIN,
-        BAD_PULSE
-    };
-
-    Multiservo();
-    Multiservo(uint8_t twiAddress);
-
-    Error attach(int pin);
-    Error attach(int pin, int minPulse, int maxPulse);
-
-    Error detach();
-
-    Error write(int value);
-    Error writeMicroseconds(int pulseWidth);
-
+    Multiservo(uint8_t twiAddress = MULTISERVO_I2C_ADDRESS_DEFAULT);
+    void attach(int pin);
+    void attach(int pin, int minPulse, int maxPulse);
+    void detach();
+    void write(int value);
+    void writeMicroseconds(int pulseWidth);
+    void writeMicroseconds(uint8_t pin, uint16_t pulseWidth,
+                                  uint8_t twiAddress);
     int read() const;
     bool attached() const;
 
-protected:
-    static const unsigned int AddressDefault;
-    static const unsigned int PulseMinDefault;
-    static const unsigned int PulseMaxDefault;
-    static const unsigned int nAttemptsDefault;
-    static const unsigned char PinInvalid;
-    static const unsigned int nPinMax;
-    static const unsigned int PulseMaxAbsolute;
-
+private:
     uint8_t m_iPin;
     uint8_t m_twiAddress;
     uint16_t m_minPulse;
     uint16_t m_maxPulse;
     uint16_t m_pulseWidth;
-
-public:
-    static Error writeMicroseconds(uint8_t pin, uint16_t pulseWidth,
-                                   uint8_t twiAddress, uint8_t retryAttempts);
 };
 
 #endif // __MULTISERVO_H__
