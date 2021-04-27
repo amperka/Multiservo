@@ -20,7 +20,7 @@ void Multiservo::detach() {
     if (!attached()) {
         return;
     }
-    writeMicroseconds(_pin, 0, _i2cAddress);
+    _writeByte16(_pin, 0);
 }
 
 void Multiservo::write(int angle) {
@@ -39,17 +39,8 @@ void Multiservo::writeMicroseconds(int pulse) {
         return;
     }
     _pulse = pulse;
-    writeMicroseconds(_pin, _pulse, _i2cAddress);
-}
 
-void Multiservo::writeMicroseconds(uint8_t pin, uint16_t pulse,
-                                   uint8_t i2cAddress) {
-
-    Wire.beginTransmission(i2cAddress);
-    Wire.write(pin);
-    Wire.write((pulse >> 8) & 0xFF);
-    Wire.write(pulse & 0xFF);
-    Wire.endTransmission();
+    _writeByte16(_pin, _pulse);
 }
 
 int Multiservo::read() const {
@@ -57,3 +48,39 @@ int Multiservo::read() const {
 }
 
 bool Multiservo::attached() const { return _pin; }
+
+void Multiservo::_writeByte(uint8_t regAddress, uint8_t data) {
+    Wire.beginTransmission(_i2cAddress);
+    Wire.write(regAddress);
+    Wire.write(data);
+    Wire.endTransmission();
+}
+
+void Multiservo::_writeByte16(uint8_t regAddress, uint16_t data) {
+    Wire.beginTransmission(_i2cAddress);
+    Wire.write(regAddress);
+    Wire.write((data >> 8) & 0xFF);
+    Wire.write(data & 0xFF);
+    Wire.endTransmission();
+}
+
+uint8_t Multiservo::_readByte(uint8_t regAddress) {
+    uint8_t data;
+    Wire.beginTransmission(_i2cAddress);
+    Wire.write(regAddress);
+    Wire.endTransmission();
+    Wire.requestFrom(_i2cAddress, 1u);
+    data = Wire.read();
+    return data;
+}
+
+uint16_t Multiservo::_readByte16(uint8_t regAddress) {
+    uint16_t data;
+    Wire.beginTransmission(_i2cAddress);
+    Wire.write(regAddress);
+    Wire.endTransmission();
+    Wire.requestFrom(_i2cAddress, 2u);
+    data = Wire.read();
+    data = (data << 8) | Wire.read();
+    return data;
+}

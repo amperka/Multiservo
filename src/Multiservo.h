@@ -20,12 +20,14 @@ public:
     void detach();
     void write(int angle);
     void writeMicroseconds(int pulse);
-    void writeMicroseconds(uint8_t pin, uint16_t pulse,
-                                  uint8_t i2cAddress);
     int read() const;
     bool attached() const;
 
 private:
+    void _writeByte(uint8_t regAddress, uint8_t data);
+    void _writeByte16(uint8_t regAddress, uint16_t data);
+    uint8_t _readByte(uint8_t regAddress);
+    uint16_t _readByte16(uint8_t regAddress);
     uint8_t _i2cAddress;
     uint8_t _pin;
     uint16_t _pulse;
