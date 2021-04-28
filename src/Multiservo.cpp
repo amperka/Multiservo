@@ -47,11 +47,24 @@ int Multiservo::read() const {
     return map(_pulse, _minPulse, _maxPulse, 0, 180);
 }
 
-int Multiservo::readMicroseconds() const {
-    return _pulse;
-}
+int Multiservo::readMicroseconds() const { return _pulse; }
 
 bool Multiservo::attached() const { return _pin; }
+
+bool Multiservo::readVoltageCurrent() {
+    uint8_t data[4];
+    // Multiservo already receive 4 bytes: 2 bytes voltage and 2 bytes current
+    _readBytes(0, data, 4);
+    _voltage = (data[1] << 8) | data[0];
+    _voltage = 0x7FFF & ((_voltage * 59) / 5);
+    _current = (data[3] << 8) | data[2];
+    _current = (_current * 39) / 2;
+    return true;
+}
+
+uint16_t Multiservo::getVoltage() const { return _voltage; }
+
+uint16_t Multiservo::getCurrent() const { return _current; }
 
 void Multiservo::_writeByte(uint8_t regAddress, uint8_t data) {
     _wire->beginTransmission(_i2cAddress);
@@ -65,6 +78,14 @@ void Multiservo::_writeByte16(uint8_t regAddress, uint16_t data) {
     _wire->write(regAddress);
     _wire->write((data >> 8) & 0xFF);
     _wire->write(data & 0xFF);
+    _wire->endTransmission();
+}
+
+void Multiservo::_writeBytes(uint8_t regAddress, uint8_t* data,
+                             uint8_t length) {
+    _wire->beginTransmission(_i2cAddress);
+    _wire->write(regAddress);
+    _wire->write(data, length);
     _wire->endTransmission();
 }
 
@@ -87,4 +108,14 @@ uint16_t Multiservo::_readByte16(uint8_t regAddress) {
     data = _wire->read();
     data = (data << 8) | _wire->read();
     return data;
+}
+
+void Multiservo::_readBytes(uint8_t regAddress, uint8_t* data, uint8_t length) {
+    _wire->beginTransmission(_i2cAddress);
+    _wire->write(regAddress);
+    _wire->endTransmission();
+    _wire->requestFrom(_i2cAddress, length);
+    for (size_t i = 0; i < length; i++) {
+        *data++ = _wire->read();
+    }
 }

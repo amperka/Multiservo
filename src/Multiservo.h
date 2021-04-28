@@ -23,19 +23,25 @@ public:
     int read() const;
     int readMicroseconds() const;
     bool attached() const;
+    bool readVoltageCurrent();
+    uint16_t getVoltage() const;
+    uint16_t getCurrent() const;
 
 private:
     TwoWire* _wire;
     void _writeByte(uint8_t regAddress, uint8_t data);
     void _writeByte16(uint8_t regAddress, uint16_t data);
+    void _writeBytes(uint8_t regAddress, uint8_t* data, uint8_t length);
     uint8_t _readByte(uint8_t regAddress);
     uint16_t _readByte16(uint8_t regAddress);
+    void _readBytes(uint8_t regAddress, uint8_t* data, uint8_t length);
     uint8_t _i2cAddress;
     uint8_t _pin;
     uint16_t _pulse;
     uint16_t _minPulse;
     uint16_t _maxPulse;
-
+    uint16_t _voltage;
+    uint16_t _current;
 };
 
 #endif // __MULTISERVO_H__

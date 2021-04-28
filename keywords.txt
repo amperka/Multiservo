@@ -6,7 +6,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Servo	KEYWORD1	Servo
+Multiservo	KEYWORD1	Multiservo
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -18,6 +18,9 @@ read	KEYWORD2
 attached	KEYWORD2
 writeMicroseconds	KEYWORD2
 readMicroseconds	KEYWORD2
+readVoltageCurrent	KEYWORD2
+getVoltage	KEYWORD2
+getCurrent	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
