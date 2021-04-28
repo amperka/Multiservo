@@ -3,6 +3,7 @@
 Multiservo::Multiservo(TwoWire& wire, uint8_t i2cAddress) {
     _i2cAddress = i2cAddress;
     _wire = &wire;
+    _attached = false;
 }
 
 void Multiservo::attach(int pin, int minPulse, int maxPulse) {
@@ -11,6 +12,7 @@ void Multiservo::attach(int pin, int minPulse, int maxPulse) {
     }
     _wire->begin();
     _pin = pin;
+    _attached = true;
     _minPulse = minPulse;
     _maxPulse = maxPulse;
     _pulse = (_minPulse + _maxPulse) / 2;
@@ -21,6 +23,7 @@ void Multiservo::detach() {
     if (!attached()) {
         return;
     }
+    _attached = false;
     _writeByte16(_pin, 0);
 }
 
@@ -49,14 +52,15 @@ int Multiservo::read() const {
 
 int Multiservo::readMicroseconds() const { return _pulse; }
 
-bool Multiservo::attached() const { return _pin; }
+bool Multiservo::attached() const { return _attached; }
 
 bool Multiservo::readVoltageCurrent() {
     uint8_t data[4];
-    // Multiservo already receive 4 bytes: 2 bytes voltage and 2 bytes current
+    // Multiservo receive 4 bytes: 2 bytes voltage and 2 bytes current
+    // The details see in schematic for Multiservo
     _readBytes(0, data, 4);
     _voltage = (data[1] << 8) | data[0];
-    _voltage = 0x7FFF & ((_voltage * 59) / 5);
+    _voltage = (_voltage * 59) / 5;
     _current = (data[3] << 8) | data[2];
     _current = (_current * 39) / 2;
     return true;

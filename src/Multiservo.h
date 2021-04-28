@@ -42,6 +42,7 @@ private:
     uint16_t _maxPulse;
     uint16_t _voltage;
     uint16_t _current;
+    bool _attached;
 };
 
 #endif // __MULTISERVO_H__

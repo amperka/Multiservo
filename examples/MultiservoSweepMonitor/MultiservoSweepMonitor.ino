@@ -12,6 +12,7 @@ constexpr uint8_t MULTI_SERVO_PIN = 7;
 int pos = 0;
 
 void setup() {
+    // Открываем последовательный порт
     Serial.begin(9600);
     // Подключаем сервомотор
     multiservo.attach(MULTI_SERVO_PIN);
@@ -22,6 +23,8 @@ void loop() {
     for (pos = 0; pos <= 180; pos++) {
         // Отправляем текущий угол на серво
         multiservo.write(pos);
+        // Выводим текущие показания напряжения и 
+        // тока на линии питания моторов
         multiservo.readVoltageCurrent();
         Serial.print("V: ");
         Serial.print(multiservo.getVoltage());
@@ -36,6 +39,8 @@ void loop() {
     for (pos = 180; pos >= 0; pos--) {
         // Отправляем текущий угол на серво
         multiservo.write(pos);
+        // Выводим текущие показания напряжения и 
+        // тока на линии питания моторов
         multiservo.readVoltageCurrent();
         Serial.print("V: ");
         Serial.print(multiservo.getVoltage());
