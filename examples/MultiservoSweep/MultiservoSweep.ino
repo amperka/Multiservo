@@ -1,26 +1,34 @@
-#include <Wire.h>
+// Библиотека для работы с Multiservo Shield
+// https://github.com/amperka/Multiservo
 #include <Multiservo.h>
 
-Multiservo myservo;
+// Создаём объект для работы с сервомоторами
+Multiservo multiservo;
 
-int pos = 0;  
+// Задаём имя пина к которому подключён сервопривод
+constexpr uint8_t MULTI_SERVO_PIN = 7;
 
-void setup(void)
-{
-  Wire.begin();
-  myservo.attach(17);
+// Переменная для хранения текущей позиции сервомотора
+int pos = 0;
+
+void setup() {
+    // Подключаем сервомотор
+    multiservo.attach(MULTI_SERVO_PIN);
 }
 
-void loop(void)
-{
-  for (pos = 0; pos <= 180; pos += 1) // goes from 0 degrees to 180 degrees
-  { // in steps of 1 degree
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(15);                       // waits 15ms for the servo to reach the position
-  }
-  for (pos = 180; pos >= 0; pos -= 1) // goes from 180 degrees to 0 degrees
-  {
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(15);                       // waits 15ms for the servo to reach the position
-  }
+void loop() {
+    // Перебираем значения счётчика от 0 до 180
+    for (pos = 0; pos <= 180; pos++) {
+        // Отправляем текущий угол на серво
+        multiservo.write(pos);
+        // Ждём 15 мс
+        delay(15);
+    }
+    // Перебираем значения счётчика от 180 до 0
+    for (pos = 180; pos >= 0; pos--) {
+        // Отправляем текущий угол на серво
+        multiservo.write(pos);
+        // Ждём 15 мс
+        delay(15);
+    }
 }

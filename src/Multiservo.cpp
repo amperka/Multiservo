@@ -14,7 +14,7 @@ void Multiservo::attach(int pin, int minPulse, int maxPulse) {
     _minPulse = minPulse;
     _maxPulse = maxPulse;
     _pulse = (_minPulse + _maxPulse) / 2;
-    writeMicroseconds(_pulse);
+    _writeByte16(_pin, _pulse);
 }
 
 void Multiservo::detach() {
@@ -40,12 +40,15 @@ void Multiservo::writeMicroseconds(int pulse) {
         return;
     }
     _pulse = pulse;
-
     _writeByte16(_pin, _pulse);
 }
 
 int Multiservo::read() const {
     return map(_pulse, _minPulse, _maxPulse, 0, 180);
+}
+
+int Multiservo::readMicroseconds() const {
+    return _pulse;
 }
 
 bool Multiservo::attached() const { return _pin; }

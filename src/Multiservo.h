@@ -21,6 +21,7 @@ public:
     void write(int angle);
     void writeMicroseconds(int pulse);
     int read() const;
+    int readMicroseconds() const;
     bool attached() const;
 
 private:
