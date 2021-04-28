@@ -1,14 +1,15 @@
 #include "Multiservo.h"
 
-Multiservo::Multiservo(uint8_t i2cAddress)
-    : _i2cAddress(i2cAddress) {
-    Wire.begin();
+Multiservo::Multiservo(TwoWire& wire, uint8_t i2cAddress) {
+    _i2cAddress = i2cAddress;
+    _wire = &wire;
 }
 
 void Multiservo::attach(int pin, int minPulse, int maxPulse) {
     if (pin < MULTISERVO_MIN_PIN_SERVO || pin >= MULTISERVO_MAX_PIN_SERVO) {
         return;
     }
+    _wire->begin();
     _pin = pin;
     _minPulse = minPulse;
     _maxPulse = maxPulse;
@@ -50,37 +51,37 @@ int Multiservo::read() const {
 bool Multiservo::attached() const { return _pin; }
 
 void Multiservo::_writeByte(uint8_t regAddress, uint8_t data) {
-    Wire.beginTransmission(_i2cAddress);
-    Wire.write(regAddress);
-    Wire.write(data);
-    Wire.endTransmission();
+    _wire->beginTransmission(_i2cAddress);
+    _wire->write(regAddress);
+    _wire->write(data);
+    _wire->endTransmission();
 }
 
 void Multiservo::_writeByte16(uint8_t regAddress, uint16_t data) {
-    Wire.beginTransmission(_i2cAddress);
-    Wire.write(regAddress);
-    Wire.write((data >> 8) & 0xFF);
-    Wire.write(data & 0xFF);
-    Wire.endTransmission();
+    _wire->beginTransmission(_i2cAddress);
+    _wire->write(regAddress);
+    _wire->write((data >> 8) & 0xFF);
+    _wire->write(data & 0xFF);
+    _wire->endTransmission();
 }
 
 uint8_t Multiservo::_readByte(uint8_t regAddress) {
     uint8_t data;
-    Wire.beginTransmission(_i2cAddress);
-    Wire.write(regAddress);
-    Wire.endTransmission();
-    Wire.requestFrom(_i2cAddress, 1u);
-    data = Wire.read();
+    _wire->beginTransmission(_i2cAddress);
+    _wire->write(regAddress);
+    _wire->endTransmission();
+    _wire->requestFrom(_i2cAddress, 1u);
+    data = _wire->read();
     return data;
 }
 
 uint16_t Multiservo::_readByte16(uint8_t regAddress) {
     uint16_t data;
-    Wire.beginTransmission(_i2cAddress);
-    Wire.write(regAddress);
-    Wire.endTransmission();
-    Wire.requestFrom(_i2cAddress, 2u);
-    data = Wire.read();
-    data = (data << 8) | Wire.read();
+    _wire->beginTransmission(_i2cAddress);
+    _wire->write(regAddress);
+    _wire->endTransmission();
+    _wire->requestFrom(_i2cAddress, 2u);
+    data = _wire->read();
+    data = (data << 8) | _wire->read();
     return data;
 }
