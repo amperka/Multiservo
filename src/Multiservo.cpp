@@ -6,6 +6,10 @@ Multiservo::Multiservo(TwoWire& wire, uint8_t i2cAddress) {
     _attached = false;
 }
 
+void Multiservo::attach(int pin) {
+    attach(pin, MULTISERVO_MIN_PULSE_WIDTH, MULTISERVO_MAX_PULSE_WIDTH);
+}
+
 void Multiservo::attach(int pin, int minPulse, int maxPulse) {
     if (pin < MULTISERVO_MIN_PIN_SERVO || pin >= MULTISERVO_MAX_PIN_SERVO) {
         return;
@@ -58,7 +62,9 @@ bool Multiservo::readVoltageCurrent() {
     uint8_t data[4];
     // Multiservo receive 4 bytes: 2 bytes voltage and 2 bytes current
     // The details see in schematic for Multiservo
-    _readBytes(0, data, 4);
+    if (_readBytes(0, data, 4)) {
+        return false;
+    }
     _voltage = (data[1] << 8) | data[0];
     _voltage = (_voltage * 59) / 5;
     _current = (data[3] << 8) | data[2];
@@ -114,12 +120,16 @@ uint16_t Multiservo::_readByte16(uint8_t regAddress) {
     return data;
 }
 
-void Multiservo::_readBytes(uint8_t regAddress, uint8_t* data, uint8_t length) {
+bool Multiservo::_readBytes(uint8_t regAddress, uint8_t* data, uint8_t length) {
     _wire->beginTransmission(_i2cAddress);
     _wire->write(regAddress);
     _wire->endTransmission();
     _wire->requestFrom(_i2cAddress, length);
+    if (Wire.available() < length) {
+        return false;
+    }
     for (size_t i = 0; i < length; i++) {
         *data++ = _wire->read();
     }
+    return true;
 }
