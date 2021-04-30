@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map Multiservo
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Multiservo	KEYWORD1	Multiservo
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+attach	KEYWORD2
+detach	KEYWORD2
+write	KEYWORD2
+read	KEYWORD2
+attached	KEYWORD2
+writeMicroseconds	KEYWORD2
+readMicroseconds	KEYWORD2
+readVoltageCurrent	KEYWORD2
+getVoltage	KEYWORD2
+getCurrent	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
